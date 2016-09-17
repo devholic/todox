@@ -35,7 +35,7 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
 
     override fun onResume() {
         super.onResume()
-        subscribeRecyclerView()
+        subscribeView()
     }
 
     override fun onPause() {
@@ -79,7 +79,7 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
         d.show(supportFragmentManager, "label_dialog")
     }
 
-    override fun subscribeRecyclerView() {
+    override fun subscribeView() {
         presenter.addSubscription(
                 presenter.getLabelList()
                         .observeOn(AndroidSchedulers.mainThread())
@@ -94,6 +94,12 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
                             showLabelDialog(it.id, it.label)
                         })
         )
+        presenter.addSubscription(
+                RxView.clicks(action_btn)
+                        .onBackpressureDrop()
+                        .subscribe({
+                            showLabelDialog(null, null)
+                        }))
     }
 
     private fun setLayout() {
@@ -103,13 +109,6 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
             setTitle(R.string.labelcreate_title)
-        })
-        with(action_btn, {
-            RxView.clicks(this)
-                    .onBackpressureDrop()
-                    .subscribe({
-                        showLabelDialog(null, null)
-                    })
         })
         with(recycler_view, {
             linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
