@@ -4,4 +4,8 @@
     <string name="home_cancel_check">Please click back again to exit</string>
 
     <string name="labelcreate_title">Create Label</string>
+    <string name="labeltext_dialog_new_title">New Label</string>
+    <string name="labeltext_dialog_edit_title">Edit Label</string>
+    <string name="labeltext_dialog_positive">OK</string>
+    <string name="labeltext_dialog_negative">Cancel</string>
 </resources>

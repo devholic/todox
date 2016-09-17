@@ -1,5 +1,6 @@
 package io.github.devholic.todox.home.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -11,6 +12,7 @@ import io.github.devholic.todox.TodoxApplication
 import io.github.devholic.todox.dagger.component.DaggerActivityComponent
 import io.github.devholic.todox.dagger.module.ActivityModule
 import io.github.devholic.todox.home.presenter.HomePresenter
+import io.github.devholic.todox.todo.label.view.LabelCreateActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import javax.inject.Inject
 
@@ -44,7 +46,9 @@ class HomeActivity : AppCompatActivity(), HomeView {
         when (item?.itemId) {
             R.id.action_label -> {
 
-                // TODO : add LabelCreateActivity intent
+                val intent = Intent(this, LabelCreateActivity::class.java)
+
+                startActivity(intent)
                 return true
             }
             else -> {
