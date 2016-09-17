@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import dagger.Component
 import io.github.devholic.todox.dagger.ActivityScope
 import io.github.devholic.todox.dagger.module.ActivityModule
+import io.github.devholic.todox.home.view.HomeActivity
 
 @ActivityScope
 @Component(
@@ -14,5 +15,5 @@ interface ActivityComponent : TodoxComponent {
 
     fun provideActivity(): AppCompatActivity
 
-    // TODO : add inject
+    fun inject(activity: HomeActivity)
 }

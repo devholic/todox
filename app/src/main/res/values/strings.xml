@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Todox</string>
+
+    <string name="home_cancel_check">Please click back again to exit</string>
+
+    <string name="labelcreate_title">Create Label</string>
 </resources>
