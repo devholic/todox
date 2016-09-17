@@ -1,11 +1,23 @@
 package io.github.devholic.todox.db
 
+import android.content.ContentValues
 import android.database.Cursor
 import nz.bradcampbell.paperparcel.PaperParcel
 import nz.bradcampbell.paperparcel.PaperParcelable
 
 @PaperParcel
 data class TodoLabel(val id: Int = -1, val label: String) : PaperParcelable {
+
+    fun toContentValue(): ContentValues {
+
+        val content = ContentValues()
+
+        if (id != -1) {
+            content.put(TodoLabel.ID, id)
+        }
+        content.put(TodoLabel.LABEL, label)
+        return content
+    }
 
     companion object {
 
