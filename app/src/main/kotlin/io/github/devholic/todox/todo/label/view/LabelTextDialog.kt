@@ -48,6 +48,7 @@ class LabelTextDialog : AppCompatDialogFragment() {
                     if (labelInput.text.length > 0) {
                         dismiss()
                         callback.dialogLabelEntered(labelId, labelInput.text.toString())
+                        return@setPositiveButton
                     }
                     Toast.makeText(context, context.getString(R.string.labeltext_dialog_empty),
                             Toast.LENGTH_SHORT).show()
