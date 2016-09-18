@@ -63,9 +63,11 @@ data class Todo(val id: Int = -1, val labelId: String, val todo: String, val pri
             val idList = idString.split(",")
             val parsed = ArrayList<Int>()
 
-            for (id in idList) {
-                parsed.add(Integer.parseInt(id))
-            }
+            idList
+                    .filter { it.length > 0 }
+                    .forEach {
+                        parsed.add(Integer.parseInt(it))
+                    }
             return parsed
         }
     }
