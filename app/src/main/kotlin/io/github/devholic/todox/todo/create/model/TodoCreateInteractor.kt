@@ -22,23 +22,19 @@ class TodoCreateInteractor @Inject constructor(val db: BriteDatabase, val contex
 
         val selectedLabel = ArrayList<TodoLabel>()
 
-        for (label in labelList) {
-            if (selectedId.indexOf(label.id) != -1) {
-                selectedLabel.add(label)
-            }
-        }
+        labelList
+                .filter { selectedId.indexOf(it.id) != -1 }
+                .forEach { selectedLabel.add(it) }
 
         val builder = StringBuilder()
 
-        for ((id, label) in selectedLabel) {
-            builder.append(label)
-            builder.append(", ")
-        }
+        selectedLabel
+                .forEach { builder.append("#${it.label} ") }
 
         val result = builder.toString()
 
-        if (result.length > 2) {
-            return result.substring(0, result.length - 2)
+        if (result.length > 0) {
+            return result.substring(0, result.length - 1)
         }
         return context.getString(R.string.todocreate_label_default)
     }

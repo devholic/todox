@@ -20,7 +20,7 @@ class TodoCreatePresenter @Inject constructor(val db: BriteDatabase, val context
 
     val subscription: CompositeSubscription by lazy { CompositeSubscription() }
 
-    private val id: Int = -1
+    private var id: Int = -1
     private var labelList: List<TodoLabel> = Collections.emptyList()
     private var priority: Int = 4
     private var selected: ArrayList<Int> = ArrayList()
@@ -60,6 +60,14 @@ class TodoCreatePresenter @Inject constructor(val db: BriteDatabase, val context
         return interactor.saveTodo(id = id, todo = todo, priority = priority, selectedLabel = selected)
     }
 
+    override fun setTodo(todo: Todo) {
+        this.id = todo.id
+        this.priority = todo.priority
+        this.todo = todo.todo
+        this.selected = Todo.parseLabelId(todo.labelId)
+        view?.updateLabelText(interactor.getSelectedLabelString(labelList, selected))
+    }
+
     override fun setView(view: TodoCreateView) {
         this.view = view
     }
@@ -70,5 +78,6 @@ class TodoCreatePresenter @Inject constructor(val db: BriteDatabase, val context
 
     override fun updateLabelList(list: List<TodoLabel>) {
         labelList = list
+        view?.updateLabelText(interactor.getSelectedLabelString(labelList, selected))
     }
 }

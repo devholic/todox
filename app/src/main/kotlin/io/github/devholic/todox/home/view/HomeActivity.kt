@@ -2,7 +2,9 @@ package io.github.devholic.todox.home.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -11,15 +13,23 @@ import io.github.devholic.todox.R
 import io.github.devholic.todox.TodoxApplication
 import io.github.devholic.todox.dagger.component.DaggerActivityComponent
 import io.github.devholic.todox.dagger.module.ActivityModule
+import io.github.devholic.todox.db.TodoParcel
+import io.github.devholic.todox.home.adapter.TodoAdapter
 import io.github.devholic.todox.home.presenter.HomePresenter
 import io.github.devholic.todox.todo.create.view.TodoCreateActivity
 import io.github.devholic.todox.todo.label.view.LabelCreateActivity
 import kotlinx.android.synthetic.main.activity_base.*
+import rx.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class HomeActivity : AppCompatActivity(), HomeView {
 
     @Inject lateinit var presenter: HomePresenter
+
+    private val linearLayoutManager: LinearLayoutManager by lazy { LinearLayoutManager(this) }
+    private val todoAdapter: TodoAdapter by lazy { TodoAdapter() }
+
+    private var snackBar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +40,12 @@ class HomeActivity : AppCompatActivity(), HomeView {
                 .build()
                 .inject(this)
         setLayout()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        subscribeData()
+        subscribeView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,27 +74,80 @@ class HomeActivity : AppCompatActivity(), HomeView {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        presenter.onStop()
+    override fun onPause() {
+        super.onPause()
+        hideDeleteSnackbar()
+        presenter.clearSubscription()
+    }
+
+    override fun hideDeleteSnackbar() {
+        snackBar?.dismiss()
     }
 
     override fun setLayout() {
         setSupportActionBar(toolbar)
         presenter.setView(this)
-        with(action_btn, {
-            presenter.addSubscription(RxView.clicks(this)
-                    .onBackpressureDrop()
-                    .subscribe {
+        with(recycler_view) {
+            linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+            layoutManager = linearLayoutManager
+            adapter = todoAdapter
+        }
+    }
 
-                        val intent = Intent(context, TodoCreateActivity::class.java)
+    override fun showDeleteSnackbar(todo: String) {
 
-                        startActivityForResult(intent, HomePresenter.ADD_REQUEST)
-                    })
-        })
+        snackBar = Snackbar.make(coordinator_layout, "", Snackbar.LENGTH_LONG)
+
+        with(snackBar!!) {
+            setAction(getString(R.string.home_undo), {
+                presenter.recoverTodo()
+                dismiss()
+            })
+            setText("\"$todo\" ${getString(R.string.home_deleted)}.")
+            show()
+        }
     }
 
     override fun showToast(msg: String, duration: Int) {
         Toast.makeText(this, msg, duration).show()
+    }
+
+    override fun subscribeData() {
+        presenter.addSubscription(
+                presenter.getLabelList()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ todoAdapter.setLabelList(it) })
+        )
+    }
+
+    override fun subscribeView() {
+        presenter.addSubscription(todoAdapter.getCheckboxEventObservable()
+                .onBackpressureDrop()
+                .subscribe {
+                    presenter.deleteTodo(it)
+                })
+        presenter.addSubscription(todoAdapter.getClickEventObservable()
+                .onBackpressureDrop()
+                .subscribe({
+
+                    val intent = Intent(this, TodoCreateActivity::class.java)
+
+                    intent.putExtra("todo", TodoParcel(it))
+                    startActivity(intent)
+                }))
+        presenter.addSubscription(RxView.clicks(action_btn)
+                .onBackpressureDrop()
+                .subscribe {
+
+                    val intent = Intent(this, TodoCreateActivity::class.java)
+
+                    startActivity(intent)
+                })
+        presenter.setQuerySubscription(
+                presenter
+                        .getTodoList()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(todoAdapter)
+        )
     }
 }

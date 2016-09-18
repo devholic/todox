@@ -16,6 +16,7 @@ interface ITodoCreatePresenter {
     fun onPriorityChanged(priority: Int)
     fun onTodoChanged(todo: String)
     fun saveTodo(): Todo?
+    fun setTodo(todo: Todo)
     fun setView(view: TodoCreateView)
     fun showLabelSelectDialog()
     fun updateLabelList(list: List<TodoLabel>)

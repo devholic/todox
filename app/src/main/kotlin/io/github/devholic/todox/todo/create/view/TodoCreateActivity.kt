@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.TextView
 import com.jakewharton.rxbinding.view.RxView
 import com.jakewharton.rxbinding.widget.RxAdapterView
 import com.jakewharton.rxbinding.widget.RxTextView
@@ -12,10 +13,13 @@ import io.github.devholic.todox.TodoxApplication
 import io.github.devholic.todox.dagger.component.ActivityComponent
 import io.github.devholic.todox.dagger.component.DaggerActivityComponent
 import io.github.devholic.todox.dagger.module.ActivityModule
+import io.github.devholic.todox.db.Todo
 import io.github.devholic.todox.db.TodoLabel
 import io.github.devholic.todox.db.TodoLabelParcel
 import io.github.devholic.todox.todo.create.presenter.TodoCreatePresenter
 import kotlinx.android.synthetic.main.activity_todo_create.*
+import nz.bradcampbell.paperparcel.PaperParcels
+import nz.bradcampbell.paperparcel.TypedParcelable
 import java.util.*
 import javax.inject.Inject
 
@@ -26,6 +30,8 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
     var component: ActivityComponent? = null
         get
 
+    private var updateObject: Todo? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo_create)
@@ -34,6 +40,9 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
                 .activityModule(ActivityModule(this))
                 .build()
         component?.inject(this)
+        if (intent.hasExtra("todo")) {
+            updateObject = PaperParcels.unwrap(intent.getParcelableExtra<TypedParcelable<Todo>>("todo"))
+        }
         setLayout()
     }
 
@@ -70,9 +79,7 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
         val b = Bundle()
         val a = ArrayList<TodoLabelParcel>()
 
-        for (label in data) {
-            a.add(TodoLabelParcel(label))
-        }
+        data.forEach { a.add(TodoLabelParcel(it)) }
 
         b.putParcelableArrayList("data", a)
         b.putIntArray("selected", selected)
@@ -135,6 +142,18 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
             setDisplayHomeAsUpEnabled(true)
             setHomeButtonEnabled(true)
             setTitle(R.string.todocreate_title)
+        }
+        if (updateObject != null) {
+            presenter.setTodo(updateObject!!)
+            with(supportActionBar!!) {
+                setTitle(R.string.todocreate_edit_title)
+            }
+            with(todo) {
+                setText(updateObject!!.todo.toString(), TextView.BufferType.EDITABLE)
+            }
+            with(priority_spinner) {
+                setSelection(4 - updateObject!!.priority)
+            }
         }
     }
 }

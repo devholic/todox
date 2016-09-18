@@ -2,6 +2,9 @@
     <string name="app_name">Todox</string>
 
     <string name="home_cancel_check">Please click back again to exit</string>
+    <string name="home_priority">Priority</string>
+    <string name="home_deleted">deleted</string>
+    <string name="home_undo">UNDO</string>
 
     <string name="labelcreate_title">Create Label</string>
 
@@ -14,6 +17,7 @@
     <string name="labeltext_dialog_empty">Label is empty.</string>
 
     <string name="todocreate_title">Create Todo</string>
+    <string name="todocreate_edit_title">Edit Todo</string>
     <string name="todocreate_input">Todo</string>
     <string name="todocreate_priority">Priority</string>
     <string name="todocreate_label">Label</string>
