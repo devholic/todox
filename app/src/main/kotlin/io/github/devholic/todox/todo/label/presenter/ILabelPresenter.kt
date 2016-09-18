@@ -8,6 +8,6 @@ interface ILabelPresenter {
 
     fun addSubscription(s: Subscription)
     fun clearSubscription()
-    fun getLabelList(): Observable<List<TodoLabel>>
+    fun getLabelListObservable(): Observable<List<TodoLabel>>
     fun saveLabel(id: Int, label: String)
 }

@@ -96,7 +96,7 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
 
     override fun subscribeView() {
         presenter.addSubscription(
-                presenter.getLabelList()
+                presenter.getLabelListObservable()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(labelAdapter)
         )

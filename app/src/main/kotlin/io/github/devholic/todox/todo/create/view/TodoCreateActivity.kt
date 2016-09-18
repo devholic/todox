@@ -118,7 +118,7 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
     override fun subscribeData() {
         presenter.addSubscription(
                 presenter
-                        .getLabelList()
+                        .getLabelListObservable()
                         .subscribe({ presenter.updateLabelList(it) })
         )
     }

@@ -22,7 +22,7 @@ class LabelPresenter @Inject constructor(val db: BriteDatabase) : ILabelPresente
         subscription.clear()
     }
 
-    override fun getLabelList(): Observable<List<TodoLabel>> {
+    override fun getLabelListObservable(): Observable<List<TodoLabel>> {
         return interactor.getLabelList()
     }
 

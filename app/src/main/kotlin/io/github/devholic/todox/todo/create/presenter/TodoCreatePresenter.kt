@@ -35,7 +35,7 @@ class TodoCreatePresenter @Inject constructor(val db: BriteDatabase, val context
         subscription.clear()
     }
 
-    override fun getLabelList(): Observable<List<TodoLabel>> {
+    override fun getLabelListObservable(): Observable<List<TodoLabel>> {
         return interactor.getLabelList()
     }
 

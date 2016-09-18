@@ -11,7 +11,7 @@ interface ITodoCreatePresenter {
 
     fun addSubscription(s: Subscription)
     fun clearSubscription()
-    fun getLabelList(): Observable<List<TodoLabel>>
+    fun getLabelListObservable(): Observable<List<TodoLabel>>
     fun onLabelSelected(selected: ArrayList<Int>)
     fun onPriorityChanged(priority: Int)
     fun onTodoChanged(todo: String)
