@@ -30,7 +30,7 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
     var component: ActivityComponent? = null
         get
 
-    private var updateObject: Todo? = null
+    private var updateTarget: Todo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,7 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
                 .build()
         component?.inject(this)
         if (intent.hasExtra("todo")) {
-            updateObject = PaperParcels.unwrap(intent.getParcelableExtra<TypedParcelable<Todo>>("todo"))
+            updateTarget = PaperParcels.unwrap(intent.getParcelableExtra<TypedParcelable<Todo>>("todo"))
         }
         setLayout()
     }
@@ -69,22 +69,46 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
         presenter.clearSubscription()
     }
 
-    override fun dialogLabelSelected(selectedId: ArrayList<Int>) {
+    override fun onLabelSelected(selectedId: ArrayList<Int>) {
         presenter.onLabelSelected(selectedId)
+    }
+
+    override fun setLayout() {
+        setSupportActionBar(toolbar)
+        presenter.setView(this)
+        with(supportActionBar!!) {
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeButtonEnabled(true)
+            setTitle(R.string.todocreate_title)
+        }
+        if (updateTarget != null) {
+            presenter.setTodo(updateTarget!!)
+            with(supportActionBar!!) {
+                setTitle(R.string.todocreate_edit_title)
+            }
+            with(todo) {
+                setText(updateTarget!!.todo.toString(), TextView.BufferType.EDITABLE)
+            }
+            with(priority_spinner) {
+                setSelection(4 - updateTarget!!.priority)
+            }
+        }
     }
 
     override fun showLabelDialog(data: List<TodoLabel>, selected: IntArray) {
 
-        val d = LabelSelectDialog()
-        val b = Bundle()
-        val a = ArrayList<TodoLabelParcel>()
+        val dialog = LabelSelectDialog()
+        val labelList = ArrayList<TodoLabelParcel>()
 
-        data.forEach { a.add(TodoLabelParcel(it)) }
+        data.forEach { labelList.add(TodoLabelParcel(it)) }
 
-        b.putParcelableArrayList("data", a)
-        b.putIntArray("selected", selected)
-        d.arguments = b
-        d.show(supportFragmentManager, "label_select_dialog")
+        val bundle = Bundle()
+
+        bundle.putParcelableArrayList("labelList", labelList)
+        bundle.putIntArray("selected", selected)
+        dialog.arguments = bundle
+        dialog.show(supportFragmentManager, "label_select_dialog")
     }
 
     override fun showSnackbar(msg: String, duration: Int) {
@@ -132,28 +156,5 @@ class TodoCreateActivity : AppCompatActivity(), TodoCreateView {
 
     override fun updateLabelText(text: String) {
         label.text = text
-    }
-
-    private fun setLayout() {
-        setSupportActionBar(toolbar)
-        presenter.setView(this)
-        with(supportActionBar!!) {
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
-            setHomeButtonEnabled(true)
-            setTitle(R.string.todocreate_title)
-        }
-        if (updateObject != null) {
-            presenter.setTodo(updateObject!!)
-            with(supportActionBar!!) {
-                setTitle(R.string.todocreate_edit_title)
-            }
-            with(todo) {
-                setText(updateObject!!.todo.toString(), TextView.BufferType.EDITABLE)
-            }
-            with(priority_spinner) {
-                setSelection(4 - updateObject!!.priority)
-            }
-        }
     }
 }

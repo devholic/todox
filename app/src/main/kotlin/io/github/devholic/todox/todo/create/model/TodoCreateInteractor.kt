@@ -9,7 +9,7 @@ import rx.Observable
 import java.util.*
 import javax.inject.Inject
 
-class TodoCreateInteractor @Inject constructor(val db: BriteDatabase, val context: Context) {
+class TodoCreateInteractor @Inject constructor(val context: Context, val db: BriteDatabase) {
 
     private val labelQuery = "SELECT * FROM ${TodoLabel.TABLE}"
 
@@ -44,6 +44,7 @@ class TodoCreateInteractor @Inject constructor(val db: BriteDatabase, val contex
         if (id != -1) {
             return updateTodo(id, todo, priority, selectedLabel)
         }
+
         val todoObject = Todo(todo = todo, priority = priority,
                 labelId = Todo.createLabelIdString(selectedLabel))
         val insertId = db.insert(Todo.TABLE, todoObject.toContentValue())

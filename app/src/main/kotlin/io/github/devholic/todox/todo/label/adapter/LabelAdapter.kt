@@ -24,7 +24,7 @@ class LabelAdapter : RecyclerView.Adapter<LabelItemHolder>(), Action1<List<TodoL
     }
 
     override fun onBindViewHolder(holder: LabelItemHolder, position: Int) {
-        holder.bindLabel(data[position].label)
+        holder.bind(data[position])
         holder.itemView.setOnClickListener({ clickSubject.onNext(data[position]) })
     }
 

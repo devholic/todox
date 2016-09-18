@@ -12,7 +12,7 @@ class LabelPresenter @Inject constructor(val db: BriteDatabase) : ILabelPresente
 
     @Inject lateinit var interactor: LabelInteractor
 
-    val subscription: CompositeSubscription by lazy { CompositeSubscription() }
+    private val subscription: CompositeSubscription by lazy { CompositeSubscription() }
 
     override fun addSubscription(s: Subscription) {
         subscription.add(s)

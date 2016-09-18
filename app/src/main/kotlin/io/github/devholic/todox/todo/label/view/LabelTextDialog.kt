@@ -47,7 +47,7 @@ class LabelTextDialog : AppCompatDialogFragment() {
                 .setPositiveButton(getString(R.string.labeltext_dialog_positive), { d, pos ->
                     if (labelInput.text.length > 0) {
                         dismiss()
-                        callback.dialogLabelEntered(labelId, labelInput.text.toString())
+                        callback.onLabelEntered(labelId, labelInput.text.toString())
                         return@setPositiveButton
                     }
                     Toast.makeText(context, context.getString(R.string.labeltext_dialog_empty),
@@ -61,6 +61,6 @@ class LabelTextDialog : AppCompatDialogFragment() {
 
     interface LabelTextDialogCallback {
 
-        fun dialogLabelEntered(id: Int, label: String)
+        fun onLabelEntered(id: Int, label: String)
     }
 }

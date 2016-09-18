@@ -57,7 +57,7 @@ class HomePresenter @Inject constructor(val db: BriteDatabase, val context: Cont
             backPressed = true
             view?.showToast(context.getString(R.string.home_cancel_check), Toast.LENGTH_SHORT)
             addSubscription(
-                    Observable.timer(3, TimeUnit.SECONDS)
+                    Observable.timer(2, TimeUnit.SECONDS)
                             .onErrorReturnNull()
                             .doOnCompleted { backPressed = false }
                             .doOnUnsubscribe { backPressed = false }
@@ -66,12 +66,6 @@ class HomePresenter @Inject constructor(val db: BriteDatabase, val context: Cont
         }
         isExit = true
         return isExit
-    }
-
-    override fun recoverTodo() {
-        if (deleteCache != null) {
-            interactor.recoverTodo(deleteCache!!)
-        }
     }
 
     override fun setQuerySubscription(s: Subscription) {
@@ -83,5 +77,11 @@ class HomePresenter @Inject constructor(val db: BriteDatabase, val context: Cont
 
     override fun setView(view: HomeView) {
         this.view = view
+    }
+
+    override fun undoDelete() {
+        if (deleteCache != null) {
+            interactor.recoverTodo(deleteCache!!)
+        }
     }
 }

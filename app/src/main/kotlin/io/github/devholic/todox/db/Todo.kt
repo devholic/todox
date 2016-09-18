@@ -42,6 +42,7 @@ data class Todo(val id: Int = -1, val labelId: String, val todo: String, val pri
             }
 
             val result = builder.toString()
+
             if (result.length > 0) {
                 return result.substring(0, result.length - 1)
             }

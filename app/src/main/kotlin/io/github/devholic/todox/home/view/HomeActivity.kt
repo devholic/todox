@@ -100,7 +100,7 @@ class HomeActivity : AppCompatActivity(), HomeView {
 
         with(snackBar!!) {
             setAction(getString(R.string.home_undo), {
-                presenter.recoverTodo()
+                presenter.undoDelete()
                 dismiss()
             })
             setText("\"$todo\" ${getString(R.string.home_deleted)}.")

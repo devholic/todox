@@ -14,7 +14,7 @@ interface IHomePresenter {
     fun getLabelList(): Observable<List<TodoLabel>>
     fun getTodoList(): Observable<List<Todo>>
     fun onBackPressed(): Boolean
-    fun recoverTodo()
     fun setQuerySubscription(s: Subscription)
     fun setView(view: HomeView)
+    fun undoDelete()
 }

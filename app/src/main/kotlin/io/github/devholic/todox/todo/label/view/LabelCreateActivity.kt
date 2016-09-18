@@ -55,28 +55,43 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
         }
     }
 
-    override fun dialogLabelEntered(id: Int, label: String) {
+    override fun onLabelEntered(id: Int, label: String) {
         presenter.saveLabel(id, label)
+    }
+
+    override fun setLayout() {
+        setSupportActionBar(toolbar)
+        with(supportActionBar!!, {
+            setDisplayShowHomeEnabled(true)
+            setDisplayHomeAsUpEnabled(true)
+            setHomeButtonEnabled(true)
+            setTitle(R.string.labelcreate_title)
+        })
+        with(recycler_view, {
+            linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+            layoutManager = linearLayoutManager
+            adapter = labelAdapter
+        })
     }
 
     override fun showLabelDialog(id: Int?, label: String?) {
 
-        val d = LabelTextDialog()
-        val b = Bundle()
+        val dialog = LabelTextDialog()
+        val bundle = Bundle()
 
         if (id == null && label == null) {
-            b.putString("title", getString(R.string.labeltext_dialog_new_title))
+            bundle.putString("title", getString(R.string.labeltext_dialog_new_title))
         } else {
-            b.putString("title", getString(R.string.labeltext_dialog_edit_title))
+            bundle.putString("title", getString(R.string.labeltext_dialog_edit_title))
         }
         if (id != null) {
-            b.putInt("id", id)
+            bundle.putInt("id", id)
         }
         if (label != null) {
-            b.putString("content", label)
+            bundle.putString("content", label)
         }
-        d.arguments = b
-        d.show(supportFragmentManager, "label_dialog")
+        dialog.arguments = bundle
+        dialog.show(supportFragmentManager, "label_dialog")
     }
 
     override fun subscribeView() {
@@ -100,20 +115,5 @@ class LabelCreateActivity : AppCompatActivity(), LabelCreateView {
                         .subscribe({
                             showLabelDialog(null, null)
                         }))
-    }
-
-    private fun setLayout() {
-        setSupportActionBar(toolbar)
-        with(supportActionBar!!, {
-            setDisplayShowHomeEnabled(true)
-            setDisplayHomeAsUpEnabled(true)
-            setHomeButtonEnabled(true)
-            setTitle(R.string.labelcreate_title)
-        })
-        with(recycler_view, {
-            linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-            layoutManager = linearLayoutManager
-            adapter = labelAdapter
-        })
     }
 }

@@ -4,6 +4,7 @@ import io.github.devholic.todox.db.TodoLabel
 
 interface TodoCreateView : LabelSelectDialog.LabelSelectDialogCallback {
 
+    fun setLayout()
     fun showLabelDialog(data: List<TodoLabel>, selected: IntArray)
     fun showSnackbar(msg: String, duration: Int)
     fun subscribeData()

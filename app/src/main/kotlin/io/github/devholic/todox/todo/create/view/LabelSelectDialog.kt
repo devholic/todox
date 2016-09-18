@@ -6,19 +6,19 @@ import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import io.github.devholic.todox.R
 import io.github.devholic.todox.db.TodoLabel
 import io.github.devholic.todox.db.TodoLabelParcel
 import io.github.devholic.todox.todo.create.adapter.LabelSelectAdapter
+import kotlinx.android.synthetic.main.dialog_labelselect.view.*
 import java.util.*
 
 class LabelSelectDialog : AppCompatDialogFragment() {
 
     private val linearLayoutManager: LinearLayoutManager by lazy { LinearLayoutManager(context) }
 
-    private var data: ArrayList<TodoLabel> = ArrayList()
+    private var labelList: ArrayList<TodoLabel> = ArrayList()
     private var selectedId: ArrayList<Int> = ArrayList()
 
     private lateinit var callback: LabelSelectDialogCallback
@@ -35,33 +35,29 @@ class LabelSelectDialog : AppCompatDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val rawData = arguments.getParcelableArrayList<TodoLabelParcel>("data")
         val selected = arguments.getIntArray("selected")
 
         selectedId.clear()
-        for (s in selected) {
-            selectedId.add(s)
-        }
+        selected.forEach { selectedId.add(it) }
 
-        data.clear()
-        for (d in rawData) {
-            data.add(d.data)
-        }
+        val passedLabel = arguments.getParcelableArrayList<TodoLabelParcel>("labelList")
+
+        labelList.clear()
+        passedLabel.forEach { labelList.add(it.data) }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
         val v = LayoutInflater.from(context).inflate(R.layout.dialog_labelselect, null)
-        val recyclerView = (v.findViewById(R.id.recycler_view) as RecyclerView)
 
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        recyclerView.layoutManager = linearLayoutManager
-        recyclerView.adapter = LabelSelectAdapter(data, selectedId)
+        v.recycler_view.layoutManager = linearLayoutManager
+        v.recycler_view.adapter = LabelSelectAdapter(labelList, selectedId)
 
-        val b = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity)
                 .setTitle(context.getString(R.string.labelselect_dialog_title))
                 .setPositiveButton(getString(R.string.labeltext_dialog_positive), { d, pos ->
-                    callback.dialogLabelSelected((recyclerView.adapter as LabelSelectAdapter).selected)
+                    callback.onLabelSelected((v.recycler_view.adapter as LabelSelectAdapter).selected)
                     dismiss()
                 })
                 .setNegativeButton(getString(R.string.labeltext_dialog_negative), { d, pos ->
@@ -69,11 +65,11 @@ class LabelSelectDialog : AppCompatDialogFragment() {
                 })
                 .setView(v)
 
-        return b.create()
+        return builder.create()
     }
 
     interface LabelSelectDialogCallback {
 
-        fun dialogLabelSelected(selectedId: ArrayList<Int>)
+        fun onLabelSelected(selectedId: ArrayList<Int>)
     }
 }

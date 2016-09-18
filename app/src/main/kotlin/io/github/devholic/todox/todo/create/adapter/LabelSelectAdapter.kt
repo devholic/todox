@@ -9,9 +9,10 @@ import java.util.*
 
 class LabelSelectAdapter : RecyclerView.Adapter<LabelSelectItemHolder> {
 
-    private var data: List<TodoLabel> = Collections.emptyList()
     var selected: ArrayList<Int> = ArrayList()
         get
+
+    private var data: List<TodoLabel> = Collections.emptyList()
 
     constructor(data: List<TodoLabel>, selected: ArrayList<Int>) {
         this.data = data

@@ -9,17 +9,19 @@ import kotlinx.android.synthetic.main.item_todo.view.*
 
 class TodoItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(todo: Todo, label: String?) {
+    fun bind(data: Todo, label: String?) {
+
         val color: Int
-        when (todo.priority) {
+
+        when (data.priority) {
             1 -> color = ContextCompat.getColor(itemView.context, R.color.priority1)
             2 -> color = ContextCompat.getColor(itemView.context, R.color.priority2)
             3 -> color = ContextCompat.getColor(itemView.context, R.color.priority3)
             else -> color = ContextCompat.getColor(itemView.context, R.color.priority4)
         }
-        itemView.checkbox.isChecked = false
         itemView.priority_indicator.setBackgroundColor(color)
-        itemView.todo.text = todo.todo
-        itemView.label.text = "${itemView.context.getString(R.string.home_priority)}${todo.priority}$label"
+        itemView.checkbox.isChecked = false
+        itemView.todo.text = data.todo
+        itemView.label.text = "${itemView.context.getString(R.string.home_priority)}${data.priority}$label"
     }
 }

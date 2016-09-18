@@ -77,7 +77,7 @@ class TodoCreatePresenter @Inject constructor(val db: BriteDatabase, val context
     }
 
     override fun updateLabelList(list: List<TodoLabel>) {
-        labelList = list
+        this.labelList = list
         view?.updateLabelText(interactor.getSelectedLabelString(labelList, selected))
     }
 }
