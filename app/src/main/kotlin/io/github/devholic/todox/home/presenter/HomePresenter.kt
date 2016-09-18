@@ -13,10 +13,6 @@ import javax.inject.Inject
 
 class HomePresenter @Inject constructor(val context: Context) : IHomePresenter {
 
-    companion object {
-        val ADD_REQUEST = 3000
-    }
-
     private val subscription: CompositeSubscription by lazy { CompositeSubscription() }
 
     private var backPressed = false

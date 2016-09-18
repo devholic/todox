@@ -4,9 +4,19 @@
     <string name="home_cancel_check">Please click back again to exit</string>
 
     <string name="labelcreate_title">Create Label</string>
+
+    <string name="labelselect_dialog_title">Select Label</string>
+
     <string name="labeltext_dialog_new_title">New Label</string>
     <string name="labeltext_dialog_edit_title">Edit Label</string>
     <string name="labeltext_dialog_positive">OK</string>
     <string name="labeltext_dialog_negative">Cancel</string>
     <string name="labeltext_dialog_empty">Label is empty.</string>
+
+    <string name="todocreate_title">Create Todo</string>
+    <string name="todocreate_input">Todo</string>
+    <string name="todocreate_priority">Priority</string>
+    <string name="todocreate_label">Label</string>
+    <string name="todocreate_label_default">Select Label…</string>
+    <string name="todocreate_todo_empty">Todo is empty.</string>
 </resources>

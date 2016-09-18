@@ -12,6 +12,7 @@ import io.github.devholic.todox.TodoxApplication
 import io.github.devholic.todox.dagger.component.DaggerActivityComponent
 import io.github.devholic.todox.dagger.module.ActivityModule
 import io.github.devholic.todox.home.presenter.HomePresenter
+import io.github.devholic.todox.todo.create.view.TodoCreateActivity
 import io.github.devholic.todox.todo.label.view.LabelCreateActivity
 import kotlinx.android.synthetic.main.activity_base.*
 import javax.inject.Inject
@@ -70,7 +71,9 @@ class HomeActivity : AppCompatActivity(), HomeView {
                     .onBackpressureDrop()
                     .subscribe {
 
-                        // TODO : add TodoCreateActivity intent
+                        val intent = Intent(context, TodoCreateActivity::class.java)
+
+                        startActivityForResult(intent, HomePresenter.ADD_REQUEST)
                     })
         })
     }
