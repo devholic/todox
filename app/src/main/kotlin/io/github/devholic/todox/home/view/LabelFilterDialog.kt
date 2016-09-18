@@ -1,4 +1,4 @@
-package io.github.devholic.todox.todo.create.view
+package io.github.devholic.todox.home.view
 
 import android.app.Dialog
 import android.content.Context
@@ -10,23 +10,26 @@ import android.view.LayoutInflater
 import io.github.devholic.todox.R
 import io.github.devholic.todox.db.TodoLabel
 import io.github.devholic.todox.db.TodoLabelParcel
-import io.github.devholic.todox.todo.create.adapter.LabelSelectAdapter
+import io.github.devholic.todox.home.adapter.LabelFilterAdapter
 import kotlinx.android.synthetic.main.dialog_labelselect.view.*
+import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.CompositeSubscription
 import java.util.*
 
-class LabelSelectDialog : AppCompatDialogFragment() {
+class LabelFilterDialog : AppCompatDialogFragment() {
 
     private val linearLayoutManager: LinearLayoutManager by lazy { LinearLayoutManager(context) }
+    private val subscription: CompositeSubscription by lazy { CompositeSubscription() }
 
+    private var adapter: LabelFilterAdapter? = null
     private var labelList: ArrayList<TodoLabel> = ArrayList()
-    private var selectedId: ArrayList<Int> = ArrayList()
 
-    private lateinit var callback: LabelSelectDialogCallback
+    private lateinit var callback: LabelFilterDialogCallback
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
-            callback = activity as LabelSelectDialogCallback
+            callback = activity as LabelFilterDialogCallback
         } catch (e: ClassCastException) {
             throw(e)
         }
@@ -35,14 +38,10 @@ class LabelSelectDialog : AppCompatDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val selected = arguments.getIntArray("selected")
-
-        selectedId.clear()
-        selected.forEach { selectedId.add(it) }
-
         val passedLabel = arguments.getParcelableArrayList<TodoLabelParcel>("labelList")
 
         labelList.clear()
+        labelList.add(TodoLabel(label = context.getString(R.string.home_action_filter_default)))
         passedLabel.forEach { labelList.add(it.data) }
     }
 
@@ -52,14 +51,13 @@ class LabelSelectDialog : AppCompatDialogFragment() {
 
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
         v.recycler_view.layoutManager = linearLayoutManager
-        v.recycler_view.adapter = LabelSelectAdapter(labelList, selectedId)
+
+        adapter = LabelFilterAdapter(labelList)
+
+        v.recycler_view.adapter = adapter
 
         val builder = AlertDialog.Builder(activity)
-                .setTitle(context.getString(R.string.labelselect_dialog_title))
-                .setPositiveButton(getString(R.string.dialog_positive), { d, pos ->
-                    callback.onLabelSelected((v.recycler_view.adapter as LabelSelectAdapter).selected)
-                    dismiss()
-                })
+                .setTitle(context.getString(R.string.home_action_filter))
                 .setNegativeButton(getString(R.string.dialog_negative), { d, pos ->
                     dismiss()
                 })
@@ -68,8 +66,26 @@ class LabelSelectDialog : AppCompatDialogFragment() {
         return builder.create()
     }
 
-    interface LabelSelectDialogCallback {
+    override fun onResume() {
+        super.onResume()
+        if (adapter != null) {
+            subscription.add(
+                    adapter!!.getClickEventObservable()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({
+                                callback.onLabelSelected(it.id)
+                                dismiss()
+                            }))
+        }
+    }
 
-        fun onLabelSelected(selectedId: ArrayList<Int>)
+    override fun onPause() {
+        super.onPause()
+        subscription.clear()
+    }
+
+    interface LabelFilterDialogCallback {
+
+        fun onLabelSelected(id: Int)
     }
 }

@@ -44,7 +44,7 @@ class LabelTextDialog : AppCompatDialogFragment() {
 
         val b = AlertDialog.Builder(activity)
                 .setTitle(title)
-                .setPositiveButton(getString(R.string.labeltext_dialog_positive), { d, pos ->
+                .setPositiveButton(getString(R.string.dialog_positive), { d, pos ->
                     if (labelInput.text.length > 0) {
                         dismiss()
                         callback.onLabelEntered(labelId, labelInput.text.toString())
@@ -53,7 +53,7 @@ class LabelTextDialog : AppCompatDialogFragment() {
                     Toast.makeText(context, context.getString(R.string.labeltext_dialog_empty),
                             Toast.LENGTH_SHORT).show()
                 })
-                .setNegativeButton(getString(R.string.labeltext_dialog_negative), { d, pos -> dismiss() })
+                .setNegativeButton(getString(R.string.dialog_negative), { d, pos -> dismiss() })
                 .setView(v)
 
         return b.create()

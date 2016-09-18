@@ -10,6 +10,7 @@ class HomeInteractor @Inject constructor(val db: BriteDatabase) {
 
     private val labelQuery = "SELECT * FROM ${TodoLabel.TABLE}"
     private val todoQuery = "SELECT * FROM ${Todo.TABLE} ORDER BY ${Todo.PRIORITY} ASC"
+    private val todoFilterQuery = "SELECT * FROM ${Todo.TABLE} WHERE ${Todo.LABEL_ID} LIKE ? ORDER BY ${Todo.PRIORITY} ASC"
 
     fun deleteTodo(id: Int) {
         db.delete(Todo.TABLE, "${Todo.ID}=?", Integer.toString(id))
@@ -22,6 +23,11 @@ class HomeInteractor @Inject constructor(val db: BriteDatabase) {
 
     fun getTodoList(): Observable<List<Todo>> {
         return db.createQuery(Todo.TABLE, todoQuery)
+                .mapToList { Todo.fromCursor(it) }
+    }
+
+    fun getFilteredTodoList(filter: Int): Observable<List<Todo>> {
+        return db.createQuery(Todo.TABLE, todoFilterQuery, "%$filter%")
                 .mapToList { Todo.fromCursor(it) }
     }
 

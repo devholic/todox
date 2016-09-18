@@ -12,6 +12,7 @@ import rx.Observable
 import rx.Subscription
 import rx.lang.kotlin.onErrorReturnNull
 import rx.subscriptions.CompositeSubscription
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -23,7 +24,10 @@ class HomePresenter @Inject constructor(val db: BriteDatabase, val context: Cont
 
     private var backPressed = false
     private var deleteCache: Todo? = null
+    private var filter: Int = -1
     private var isExit = false
+    private var label = HashMap<Int, String>()
+    private var labelList: List<TodoLabel> = Collections.emptyList()
     private var querySubscription: Subscription? = null
     private var view: HomeView? = null
 
@@ -44,12 +48,19 @@ class HomePresenter @Inject constructor(val db: BriteDatabase, val context: Cont
         view?.showDeleteSnackbar(todo.todo)
     }
 
-    override fun getLabelList(): Observable<List<TodoLabel>> {
+    override fun getLabelList(): List<TodoLabel> {
+        return labelList
+    }
+
+    override fun getLabelListObservable(): Observable<List<TodoLabel>> {
         return interactor.getLabelList()
     }
 
-    override fun getTodoList(): Observable<List<Todo>> {
-        return interactor.getTodoList()
+    override fun getTodoListObservable(): Observable<List<Todo>> {
+        if (filter == -1) {
+            return interactor.getTodoList()
+        }
+        return interactor.getFilteredTodoList(filter)
     }
 
     override fun onBackPressed(): Boolean {
@@ -66,6 +77,23 @@ class HomePresenter @Inject constructor(val db: BriteDatabase, val context: Cont
         }
         isExit = true
         return isExit
+    }
+
+    override fun setLabelFilter(id: Int) {
+        this.filter = id
+        if (label.containsKey(id)) {
+            view?.setTitle("#${label[id]!!}")
+            return
+        }
+        view?.setTitle(context.getString(R.string.app_name))
+    }
+
+    override fun setLabelMap(label: HashMap<Int, String>) {
+        this.label = label
+    }
+
+    override fun setLabelList(label: List<TodoLabel>) {
+        this.labelList = label
     }
 
     override fun setQuerySubscription(s: Subscription) {

@@ -48,9 +48,8 @@ class TodoAdapter : RecyclerView.Adapter<TodoItemHolder>(), Action1<List<Todo>> 
         notifyDataSetChanged()
     }
 
-    fun setLabelList(labelList: List<TodoLabel>) {
-        this.label.clear()
-        labelList.forEach { this.label.put(it.id, it.label) }
+    fun setLabelMap(label: HashMap<Int, String>) {
+        this.label = label
         notifyDataSetChanged()
     }
 
