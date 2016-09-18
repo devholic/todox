@@ -16,5 +16,6 @@
         android:layout_marginStart="16dp"
         android:gravity="center"
         android:singleLine="true"
+        android:textColor="@android:color/primary_text_light"
         android:textSize="14sp" />
 </LinearLayout>

@@ -38,6 +38,7 @@
             android:layout_marginStart="20dp"
             android:layout_toEndOf="@+id/checkbox"
             android:layout_toRightOf="@+id/checkbox"
+            android:textColor="@android:color/primary_text_light"
             android:textSize="16sp" />
 
         <TextView
@@ -49,6 +50,7 @@
             android:layout_below="@+id/todo"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
+            android:textColor="@android:color/secondary_text_light"
             android:textSize="12sp" />
     </RelativeLayout>
 </RelativeLayout>
