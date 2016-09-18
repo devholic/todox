@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import io.github.devholic.todox.R
 
 class LabelTextDialog : AppCompatDialogFragment() {
@@ -44,12 +45,14 @@ class LabelTextDialog : AppCompatDialogFragment() {
         val b = AlertDialog.Builder(activity)
                 .setTitle(title)
                 .setPositiveButton(getString(R.string.labeltext_dialog_positive), { d, pos ->
-                    dismiss()
-                    callback.dialogLabelEntered(labelId, labelInput.text.toString())
+                    if (labelInput.text.length > 0) {
+                        dismiss()
+                        callback.dialogLabelEntered(labelId, labelInput.text.toString())
+                    }
+                    Toast.makeText(context, context.getString(R.string.labeltext_dialog_empty),
+                            Toast.LENGTH_SHORT).show()
                 })
-                .setNegativeButton(getString(R.string.labeltext_dialog_negative), { d, pos ->
-                    dismiss()
-                })
+                .setNegativeButton(getString(R.string.labeltext_dialog_negative), { d, pos -> dismiss() })
                 .setView(v)
 
         return b.create()
