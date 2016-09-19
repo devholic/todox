@@ -1,8 +1,8 @@
 package io.github.devholic.todox.todo.label.view
 
-interface LabelCreateView : LabelTextDialog.LabelTextDialogCallback {
+import io.github.devholic.todox.base.BaseView
 
-    fun setLayout()
+interface LabelCreateView : BaseView, LabelTextDialog.LabelTextDialogCallback {
+
     fun showLabelDialog(id: Int?, label: String?)
-    fun subscribeView()
 }

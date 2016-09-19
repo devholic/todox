@@ -1,16 +1,14 @@
 package io.github.devholic.todox.todo.create.presenter
 
+import io.github.devholic.todox.base.BasePresenter
 import io.github.devholic.todox.db.Todo
 import io.github.devholic.todox.db.TodoLabel
 import io.github.devholic.todox.todo.create.view.TodoCreateView
 import rx.Observable
-import rx.Subscription
 import java.util.*
 
-interface ITodoCreatePresenter {
+interface ITodoCreatePresenter : BasePresenter {
 
-    fun addSubscription(s: Subscription)
-    fun clearSubscription()
     fun getLabelListObservable(): Observable<List<TodoLabel>>
     fun onLabelSelected(selected: ArrayList<Int>)
     fun onPriorityChanged(priority: Int)

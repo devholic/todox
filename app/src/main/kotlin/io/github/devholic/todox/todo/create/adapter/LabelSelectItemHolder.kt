@@ -1,14 +1,18 @@
 package io.github.devholic.todox.todo.create.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import io.github.devholic.todox.base.BaseHolder
 import io.github.devholic.todox.db.TodoLabel
 import kotlinx.android.synthetic.main.item_label.view.*
 
-class LabelSelectItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class LabelSelectItemHolder(itemView: View) : BaseHolder<TodoLabel>(itemView) {
 
-    fun bind(label: TodoLabel, selected: Boolean) {
-        itemView.label.text = label.label
+    override fun bind(data: TodoLabel) {
+        itemView.label.text = data.label
+    }
+
+    fun bind(data: TodoLabel, selected: Boolean) {
         itemView.isPressed = selected
+        bind(data)
     }
 }

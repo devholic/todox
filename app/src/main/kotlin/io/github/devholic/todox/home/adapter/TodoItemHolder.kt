@@ -1,15 +1,15 @@
 package io.github.devholic.todox.home.adapter
 
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import io.github.devholic.todox.R
+import io.github.devholic.todox.base.BaseHolder
 import io.github.devholic.todox.db.Todo
 import kotlinx.android.synthetic.main.item_todo.view.*
 
-class TodoItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TodoItemHolder(itemView: View) : BaseHolder<Todo>(itemView) {
 
-    fun bind(data: Todo, label: String?) {
+    override fun bind(data: Todo) {
 
         val color: Int
 
@@ -22,6 +22,10 @@ class TodoItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.priority_indicator.setBackgroundColor(color)
         itemView.checkbox.isChecked = false
         itemView.todo.text = data.todo
+    }
+
+    fun bind(data: Todo, label: String?) {
+        bind(data)
         itemView.label.text = "${itemView.context.getString(R.string.home_priority)}${data.priority}$label"
     }
 }

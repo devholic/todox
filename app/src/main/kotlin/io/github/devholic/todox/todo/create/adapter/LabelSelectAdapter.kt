@@ -7,17 +7,8 @@ import io.github.devholic.todox.R
 import io.github.devholic.todox.db.TodoLabel
 import java.util.*
 
-class LabelSelectAdapter : RecyclerView.Adapter<LabelSelectItemHolder> {
-
-    var selected: ArrayList<Int> = ArrayList()
-        get
-
-    private var data: List<TodoLabel> = Collections.emptyList()
-
-    constructor(data: List<TodoLabel>, selected: ArrayList<Int>) {
-        this.data = data
-        this.selected = selected
-    }
+class LabelSelectAdapter(private val data: List<TodoLabel>, var selected: ArrayList<Int>)
+: RecyclerView.Adapter<LabelSelectItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LabelSelectItemHolder {
 
