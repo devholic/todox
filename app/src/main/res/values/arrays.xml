@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="priority_entries">
+        <item>Priority 4</item>
+        <item>Priority 3</item>
+        <item>Priority 2</item>
+        <item>Priority 1</item>
+    </string-array>
+</resources>

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="background">#FFFFFF</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="priority1">#1A237E</color>
+    <color name="priority2">#3949AB</color>
+    <color name="priority3">#7986CB</color>
+    <color name="priority4">#C5CAE9</color>
 </resources>
