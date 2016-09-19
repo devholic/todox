@@ -3,6 +3,7 @@ package io.github.devholic.todox.db
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
 
 class DBHelper(context: Context?) : SQLiteOpenHelper(context, "todox.db", null, 3) {
@@ -36,18 +37,26 @@ class DBHelper(context: Context?) : SQLiteOpenHelper(context, "todox.db", null, 
             v++
         }
         if (v == 2) {
-            val cursor = db.rawQuery(updateV3, null)
-            if (cursor != null && cursor.count != 0) {
-                cursor.moveToFirst()
-                while (cursor.moveToNext()) {
+            try {
+                db.beginTransaction()
+                val cursor = db.rawQuery(updateV3, null)
+                if (cursor != null && cursor.count != 0) {
+                    cursor.moveToFirst()
+                    while (cursor.moveToNext()) {
 
-                    val prevObject = Todo.fromCursor(cursor)
-                    val value = ContentValues()
+                        val prevObject = Todo.fromCursor(cursor)
+                        val value = ContentValues()
 
-                    value.put(Todo.LABEL_ID, getV3Label(prevObject.labelId))
-                    db.update(Todo.TABLE, value, "${Todo.ID} = ?", arrayOf(Integer.toString(prevObject.id)))
+                        value.put(Todo.LABEL_ID, getV3Label(prevObject.labelId))
+                        db.update(Todo.TABLE, value, "${Todo.ID} = ?", arrayOf(Integer.toString(prevObject.id)))
+                    }
+                    cursor.close()
                 }
-                cursor.close()
+                db.setTransactionSuccessful()
+            } catch (e: SQLiteException) {
+                e.printStackTrace()
+            } finally {
+                db.endTransaction()
             }
         }
     }
